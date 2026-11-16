@@ -1,3 +1,5 @@
+[![lua](https://github.com/cartudev/cliamp-plugin-deezload/actions/workflows/lua.yml/badge.svg)](https://github.com/cartudev/cliamp-plugin-deezload/actions/workflows/lua.yml)
+
 # cliamp-plugin-deezload
 
 A [cliamp](https://github.com/bjarneo/cliamp) plugin for the
