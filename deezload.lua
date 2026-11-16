@@ -781,10 +781,11 @@ end
 open_live_search = function(chat, title, commands, placeholder, initial)
     local liveResults, liveQueryID, liveQuery = nil, nil, ""
     local liveGen = 0
+    local inputToken
 
     local function restore_commands()
         liveResults, liveQueryID = nil, nil
-        cliamp.ui.suggestions(commands or {}, {live = false})
+        cliamp.ui.suggestions(commands or {}, {live = false, token = inputToken})
     end
 
     local function fetch_cover(options, results, index, generation, limit)
@@ -807,7 +808,7 @@ open_live_search = function(chat, title, commands, placeholder, initial)
                     if art then
                         options[index].image = art
                         if generation == liveGen then
-                            cliamp.ui.suggestions(options, {live = true, query = liveQuery})
+                            cliamp.ui.suggestions(options, {live = true, query = liveQuery, token = inputToken})
                         end
                     end
                 end
@@ -835,14 +836,14 @@ open_live_search = function(chat, title, commands, placeholder, initial)
                         return
                     end
                     if not inline or not inline.results then
-                        cliamp.ui.suggestions({}, {live = true, query = text})
+                        cliamp.ui.suggestions({}, {live = true, query = text, token = inputToken})
                         return
                     end
                     liveResults = inline.results
                     liveQueryID = inline.query_id
                     liveQuery = text
                     local options = rich_options(inline.results)
-                    cliamp.ui.suggestions(options, {live = true, query = text})
+                    cliamp.ui.suggestions(options, {live = true, query = text, token = inputToken})
                     if covers then
                         cliamp.timer.after(0.05, function()
                             fetch_cover(options, inline.results, 1, generation, math.min(#inline.results, coverLimit))
@@ -853,7 +854,7 @@ open_live_search = function(chat, title, commands, placeholder, initial)
         end)
     end
 
-    cliamp.ui.input{
+    local ok, token = cliamp.ui.input{
         title = title,
         placeholder = placeholder or "search query",
         value = initial or "",
@@ -879,6 +880,9 @@ open_live_search = function(chat, title, commands, placeholder, initial)
             end)
         end,
     }
+    if ok then
+        inputToken = token
+    end
 end
 
 local function open_input(chat, name, commands)
