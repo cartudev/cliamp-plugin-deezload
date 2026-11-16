@@ -807,7 +807,7 @@ open_live_search = function(chat, title, commands, placeholder, initial)
                     if art then
                         options[index].image = art
                         if generation == liveGen then
-                            cliamp.ui.suggestions(options, {live = true})
+                            cliamp.ui.suggestions(options, {live = true, query = liveQuery})
                         end
                     end
                 end
@@ -835,14 +835,14 @@ open_live_search = function(chat, title, commands, placeholder, initial)
                         return
                     end
                     if not inline or not inline.results then
-                        cliamp.ui.suggestions({}, {live = true})
+                        cliamp.ui.suggestions({}, {live = true, query = text})
                         return
                     end
                     liveResults = inline.results
                     liveQueryID = inline.query_id
                     liveQuery = text
                     local options = rich_options(inline.results)
-                    cliamp.ui.suggestions(options, {live = true})
+                    cliamp.ui.suggestions(options, {live = true, query = text})
                     if covers then
                         cliamp.timer.after(0.05, function()
                             fetch_cover(options, inline.results, 1, generation, math.min(#inline.results, coverLimit))
