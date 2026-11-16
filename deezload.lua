@@ -243,7 +243,15 @@ local function album_id(data)
     return data:match("album/(%d+)") or data:match("deezer%.com/album/(%d+)")
 end
 
-local function press_button(chat, messageID, button, previousButtons)
+local function button_signature(buttons)
+    local parts = {}
+    for _, button in ipairs(buttons or {}) do
+        parts[#parts+1] = (button.text or "") .. "\0" .. (button.kind or "")
+    end
+    return table.concat(parts, "\n")
+end
+
+local function press_button(chat, messageID, button, previousSignature)
     cliamp.provider.call("telegram.callback", {
         chat = chat,
         message_id = messageID,
@@ -262,8 +270,8 @@ local function press_button(chat, messageID, button, previousButtons)
             message_id = messageID,
         }, {
             on_reply = function(reply, err)
-                local count = reply and #(reply.buttons or {}) or 0
-                if reply and count ~= previousButtons then
+                local signature = button_signature(reply and reply.buttons)
+                if reply and signature ~= previousSignature then
                     handle_reply(chat, "", reply, err)
                     return
                 end
@@ -364,7 +372,7 @@ local function show_tracks(chat, messageID, buttons)
             on_select = function(index)
                 local button = others[index]
                 if button then
-                    press_button(chat, messageID, button, #(buttons or {}))
+                    press_button(chat, messageID, button, button_signature(buttons))
                 end
             end,
         }
