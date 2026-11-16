@@ -34,7 +34,11 @@ cliamp plugins trust deezload
 The plugin declares `ui`, `provider`, `provider-send`, `control` and `image`
 permissions. It needs a cliamp build with the plugin provider API (`p:action`,
 `cliamp.provider.*`, `cliamp.ui.input`, `cliamp.ui.text`, `ui.suggestions` and
-`cliamp.provider.open`).
+`cliamp.provider.open`), currently proposed in the stacked PRs
+[bjarneo/cliamp#726](https://github.com/bjarneo/cliamp/pull/726),
+[#727](https://github.com/bjarneo/cliamp/pull/727),
+[#728](https://github.com/bjarneo/cliamp/pull/728) and
+[#729](https://github.com/bjarneo/cliamp/pull/729).
 
 ## Configure
 
